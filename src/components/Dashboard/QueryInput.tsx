@@ -18,7 +18,7 @@ const QueryInput = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Filter suggestions based on current query, done on every render
+  // Filter suggestions based on current query
   const filteredSuggestions = suggestions.filter((suggestion) =>
     suggestion.toLowerCase().includes(currentQuery.toLowerCase())
   );
@@ -30,11 +30,13 @@ const QueryInput = () => {
     setActiveSuggestion(-1);
   };
 
-  // Handle suggestion selection
   const handleSuggestionClick = (suggestion: string) => {
     dispatch(setCurrentQuery(suggestion));
     setShowSuggestions(false);
-    inputRef.current?.focus();
+
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   // Handle form submission
@@ -137,7 +139,7 @@ const QueryInput = () => {
           {/* Submit button */}
           <Button
             type="submit"
-            className="bg-analytics-primary hover:bg-analytics-secondary text-white px-4 py-6 rounded-r-lg"
+            className="ml-1 bg-analytics-primary hover:bg-analytics-secondary text-white px-4 py-6 rounded-r-lg"
             aria-label="Submit query"
           >
             <ArrowRight className="h-5 w-5" />
@@ -145,7 +147,7 @@ const QueryInput = () => {
         </div>
       </form>
 
-      {/* Suggestions dropdown */}
+      {/* Suggestions dropdown - Fixed to ensure click events work properly */}
       {showSuggestions && filteredSuggestions.length > 0 && (
         <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg">
           <ul role="listbox">
@@ -157,7 +159,10 @@ const QueryInput = () => {
                 className={`px-4 py-2 cursor-pointer hover:bg-analytics-light ${
                   index === activeSuggestion ? "bg-analytics-light" : ""
                 }`}
-                onClick={() => handleSuggestionClick(suggestion)}
+                onMouseDown={(e: React.MouseEvent<HTMLLIElement>) => {
+                  e.preventDefault(); // Prevent default to keep focus
+                  handleSuggestionClick(suggestion);
+                }}
               >
                 {suggestion}
               </li>
