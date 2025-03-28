@@ -1,26 +1,20 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
+import { Badge } from "@/components/ui/badge";
+import { Clock, History, X } from "lucide-react";
 import { executeStoredQuery } from "@/store/querySlice";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Database,
-  LineChart,
-  Settings,
-  Home,
-  BarChart,
-  PieChart,
-} from "lucide-react";
 
-const Sidebar = () => {
-  const dispatch = useDispatch();
+interface SidebarProps {
+  onClose?: () => void;
+}
+
+const Sidebar = ({ onClose }: SidebarProps) => {
   const { queryHistory } = useSelector((state: RootState) => state.query);
+  const dispatch = useDispatch();
 
-  const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const formatTimestamp = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString();
   };
 
   const handleQueryClick = (id: string) => {
@@ -28,36 +22,44 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="h-screen w-[20rem] bg-analytics-dark text-white flex flex-col">
-      <div className="p-4 flex items-center gap-2">
-        <Database className="h-6 w-6 text-analytics-secondary" />
-        <h1 className="text-xl font-bold">GenAI Analytics</h1>
+    <div className="h-full flex flex-col bg-white border-r border-gray-200">
+      <div className="flex items-center justify-between p-4 border-b">
+        <h2 className="text-lg font-semibold text-analytics-primary">
+          Query History
+        </h2>
+        {/* Close button only on mobile */}
+        <button
+          onClick={onClose}
+          className="md:hidden p-1 rounded-md text-gray-500 hover:bg-gray-100"
+        >
+          <X size={20} />
+        </button>
       </div>
 
-      <div className="p-4">
-        <h2 className="text-sm font-semibold mb-2 text-gray-400">
-          RECENT QUERIES
-        </h2>
-        <ScrollArea className="h-[calc(100vh-280px)]">
-          {queryHistory.length > 0 ? (
-            <div className="space-y-2">
-              {queryHistory.map((query) => (
-                <div
-                  key={query.id}
-                  className="p-2 rounded hover:bg-analytics-primary/20 cursor-pointer transition-colors"
-                  onClick={() => handleQueryClick(query.id)}
-                >
-                  <p className="text-sm truncate">{query.text}</p>
-                  <p className="text-xs text-gray-400">
-                    {formatDate(query.timestamp)}
-                  </p>
+      <div className="flex-1 overflow-y-auto p-4">
+        {queryHistory.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            <History className="mx-auto h-12 w-12 mb-2 opacity-50" />
+            <p>No queries yet</p>
+            <p className="text-sm">Your query history will appear here</p>
+          </div>
+        ) : (
+          <ul className="space-y-3">
+            {queryHistory.map((query) => (
+              <li
+                onClick={() => handleQueryClick(query.id)}
+                key={query.id}
+                className="cursor-pointer bg-gray-50 rounded-lg p-3 hover:bg-analytics-light transition-colors"
+              >
+                <p className="font-medium text-analytics-dark">{query.text}</p>
+                <div className="flex items-center mt-2 text-xs text-gray-500">
+                  <Clock className="h-3 w-3 mr-1" />
+                  <span>{formatTimestamp(query.timestamp)}</span>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-sm text-gray-400">No queries yet</p>
-          )}
-        </ScrollArea>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

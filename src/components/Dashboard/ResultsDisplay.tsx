@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import {
@@ -34,46 +33,48 @@ const ResultsDisplay = () => {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-96 w-full">
-        <Loader2 className="h-12 w-12 text-analytics-primary animate-spin mb-4" />
-        <p className="text-lg text-gray-600">Analyzing your query...</p>
+      <div className="flex flex-col items-center justify-center h-64 md:h-96 w-full">
+        <Loader2 className="h-8 w-8 md:h-12 md:w-12 text-analytics-primary animate-spin mb-4" />
+        <p className="text-base md:text-lg text-gray-600">
+          Analyzing your query...
+        </p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-96 w-full">
-        <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
-        <p className="text-lg text-red-500">{error}</p>
+      <div className="flex flex-col items-center justify-center h-64 md:h-96 w-full">
+        <AlertCircle className="h-8 w-8 md:h-12 md:w-12 text-red-500 mb-4" />
+        <p className="text-base md:text-lg text-red-500">{error}</p>
       </div>
     );
   }
 
   if (!results) {
     return (
-      <div className="flex flex-col items-center justify-center h-96 w-full p-4">
+      <div className="flex flex-col items-center justify-center h-64 md:h-96 w-full p-4">
         <div className="text-center max-w-xl">
-          <h2 className="text-2xl font-semibold mb-4 text-analytics-primary">
+          <h2 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4 text-analytics-primary">
             Welcome to GenAI Analytics
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 mb-4 md:mb-6 text-sm md:text-base">
             Ask any question about your data using natural language. Our AI will
             analyze your query and provide relevant insights.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-analytics-light p-4 rounded-lg">
-              <p className="text-analytics-primary font-medium">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-4">
+            <div className="bg-analytics-light p-3 md:p-4 rounded-lg">
+              <p className="text-analytics-primary font-medium text-sm md:text-base">
                 "Show me monthly revenue for the last year"
               </p>
             </div>
-            <div className="bg-analytics-light p-4 rounded-lg">
-              <p className="text-analytics-primary font-medium">
+            <div className="bg-analytics-light p-3 md:p-4 rounded-lg">
+              <p className="text-analytics-primary font-medium text-sm md:text-base">
                 "What were our top selling products last quarter?"
               </p>
             </div>
-            <div className="bg-analytics-light p-4 rounded-lg">
-              <p className="text-analytics-primary font-medium">
+            <div className="bg-analytics-light p-3 md:p-4 rounded-lg">
+              <p className="text-analytics-primary font-medium text-sm md:text-base">
                 "Compare sales performance across regions"
               </p>
             </div>
@@ -88,16 +89,16 @@ const ResultsDisplay = () => {
     switch (results.type) {
       case "line":
         return (
-          <ResponsiveContainer width="100%" height={400}>
+          <ResponsiveContainer width="100%" height={300} minHeight={250}>
             <LineChart
               data={results.data}
-              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              margin={{ top: 20, right: 10, left: 0, bottom: 5 }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f1f1" />
-              <XAxis dataKey="name" />
-              <YAxis />
+              <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+              <YAxis tick={{ fontSize: 12 }} />
               <Tooltip />
-              <Legend />
+              <Legend wrapperStyle={{ fontSize: "12px" }} />
               <Line
                 type="monotone"
                 dataKey="value"
@@ -109,24 +110,24 @@ const ResultsDisplay = () => {
         );
       case "bar":
         return (
-          <ResponsiveContainer width="100%" height={400}>
+          <ResponsiveContainer width="100%" height={300} minHeight={250}>
             <BarChart
               data={results.data}
-              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              margin={{ top: 20, right: 10, left: 0, bottom: 5 }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f1f1" />
-              <XAxis dataKey="name" />
-              <YAxis />
+              <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+              <YAxis tick={{ fontSize: 12 }} />
               <Tooltip />
-              <Legend />
+              <Legend wrapperStyle={{ fontSize: "12px" }} />
               <Bar dataKey="value" fill="#9B87F5" />
             </BarChart>
           </ResponsiveContainer>
         );
       case "pie":
         return (
-          <ResponsiveContainer width="100%" height={400}>
-            <PieChart margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+          <ResponsiveContainer width="100%" height={300} minHeight={250}>
+            <PieChart margin={{ top: 20, right: 10, left: 0, bottom: 5 }}>
               <Pie
                 data={results.data}
                 cx="50%"
@@ -135,7 +136,7 @@ const ResultsDisplay = () => {
                 label={({ name, percent }) =>
                   `${name}: ${(percent * 100).toFixed(0)}%`
                 }
-                outerRadius={150}
+                outerRadius={100}
                 fill="#8884d8"
                 dataKey="value"
               >
@@ -149,7 +150,7 @@ const ResultsDisplay = () => {
                 )}
               </Pie>
               <Tooltip />
-              <Legend />
+              <Legend wrapperStyle={{ fontSize: "12px" }} />
             </PieChart>
           </ResponsiveContainer>
         );
@@ -163,14 +164,14 @@ const ResultsDisplay = () => {
     if (!results.insights) return null;
 
     return (
-      <div className="mt-4 bg-analytics-light p-4 rounded-lg">
-        <h3 className="font-semibold text-analytics-primary mb-2">
+      <div className="mt-3 md:mt-4 bg-analytics-light p-3 md:p-4 rounded-lg">
+        <h3 className="font-semibold text-analytics-primary mb-2 text-sm md:text-base">
           Key Insights
         </h3>
         <ul className="space-y-1">
           {results.insights.map((insight: string, index: number) => (
-            <li key={index} className="flex items-start">
-              <span className="inline-block h-2 w-2 mt-2 mr-2 rounded-full bg-analytics-secondary" />
+            <li key={index} className="flex items-start text-xs md:text-sm">
+              <span className="inline-block h-2 w-2 mt-1.5 mr-2 rounded-full bg-analytics-secondary" />
               <span>{insight}</span>
             </li>
           ))}
@@ -181,13 +182,15 @@ const ResultsDisplay = () => {
 
   return (
     <Card className="w-full shadow-md border-analytics-light">
-      <CardHeader>
-        <CardTitle className="text-2xl text-analytics-primary">
+      <CardHeader className="p-4 md:p-6">
+        <CardTitle className="text-xl md:text-2xl text-analytics-primary">
           {results.title}
         </CardTitle>
-        <CardDescription>{results.description}</CardDescription>
+        <CardDescription className="text-sm md:text-base">
+          {results.description}
+        </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-4 md:p-6">
         {renderChart()}
         {renderInsights()}
       </CardContent>
