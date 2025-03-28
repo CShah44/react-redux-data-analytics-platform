@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ResultsData {
   type: string;
@@ -14,6 +14,7 @@ interface QueryState {
     id: string;
     text: string;
     timestamp: number;
+    result: ResultsData | null;
   }[];
   suggestions: string[];
   isLoading: boolean;
@@ -22,33 +23,38 @@ interface QueryState {
 }
 
 const initialState: QueryState = {
-  currentQuery: '',
+  currentQuery: "",
   queryHistory: [],
   suggestions: [
-    'Show me monthly revenue for the last year',
-    'What were our top selling products last quarter?',
-    'Compare sales performance across regions',
-    'What is our customer retention rate?',
-    'Show me marketing campaign ROI'
+    "Show me monthly revenue for the last year",
+    "What were our top selling products last quarter?",
+    "Compare sales performance across regions",
+    "What is our customer retention rate?",
+    "Show me marketing campaign ROI",
   ],
   isLoading: false,
   error: null,
-  results: null
+  results: null,
 };
 
 export const querySlice = createSlice({
-  name: 'query',
+  name: "query",
   initialState,
   reducers: {
     setCurrentQuery: (state, action: PayloadAction<string>) => {
       state.currentQuery = action.payload;
     },
-    addToHistory: (state, action: PayloadAction<string>) => {
+    addToHistory: (
+      state,
+      action: PayloadAction<{ query: string; result: ResultsData }>
+    ) => {
       const newQuery = {
         id: Date.now().toString(),
-        text: action.payload,
-        timestamp: Date.now()
+        text: action.payload.query,
+        timestamp: Date.now(),
+        result: action.payload.result,
       };
+
       state.queryHistory = [newQuery, ...state.queryHistory];
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
@@ -64,10 +70,12 @@ export const querySlice = createSlice({
       state.results = null;
     },
     executeStoredQuery: (state, action: PayloadAction<string>) => {
-      const queryText = state.queryHistory.find(q => q.id === action.payload)?.text || '';
+      const q = state.queryHistory.find((q) => q.id === action.payload);
+      const queryText = q?.text || "";
       state.currentQuery = queryText;
-    }
-  }
+      state.results = q?.result;
+    },
+  },
 });
 
 export const {
@@ -77,7 +85,7 @@ export const {
   setError,
   setResults,
   clearResults,
-  executeStoredQuery
+  executeStoredQuery,
 } = querySlice.actions;
 
 export default querySlice.reducer;

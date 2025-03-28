@@ -1,22 +1,22 @@
-
-import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/store';
-import { setCurrentQuery } from '@/store/querySlice';
-import { useQueryExecution } from '@/hooks/useQueryExecution';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Search, ArrowRight, X } from 'lucide-react';
+import React, { useState, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { setCurrentQuery } from "@/store/querySlice";
+import { useQueryExecution } from "@/hooks/useQueryExecution";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search, ArrowRight, X } from "lucide-react";
 
 const QueryInput = () => {
   const dispatch = useDispatch();
   const { executeQuery } = useQueryExecution();
-  const { currentQuery, suggestions } = useSelector((state: RootState) => state.query);
+  const { currentQuery, suggestions } = useSelector(
+    (state: RootState) => state.query
+  );
   const [activeSuggestion, setActiveSuggestion] = useState(-1);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Handle query changes
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setCurrentQuery(e.target.value));
     if (e.target.value) {
@@ -27,7 +27,6 @@ const QueryInput = () => {
     setActiveSuggestion(-1);
   };
 
-  // Handle suggestion selection
   const handleSuggestionClick = (suggestion: string) => {
     dispatch(setCurrentQuery(suggestion));
     setShowSuggestions(false);
@@ -36,7 +35,6 @@ const QueryInput = () => {
     }
   };
 
-  // Handle query submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (currentQuery.trim()) {
@@ -45,70 +43,59 @@ const QueryInput = () => {
     }
   };
 
-  // Clear query
   const handleClear = () => {
-    dispatch(setCurrentQuery(''));
+    dispatch(setCurrentQuery(""));
     setShowSuggestions(false);
     if (inputRef.current) {
       inputRef.current.focus();
     }
   };
 
-  // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    // Arrow down
-    if (e.key === 'ArrowDown' && showSuggestions) {
+    if (e.key === "ArrowDown" && showSuggestions) {
       e.preventDefault();
-      const filteredSuggestions = suggestions.filter(
-        suggestion => suggestion.toLowerCase().includes(currentQuery.toLowerCase())
+      const filteredSuggestions = suggestions.filter((suggestion) =>
+        suggestion.toLowerCase().includes(currentQuery.toLowerCase())
       );
-      setActiveSuggestion(prev => 
+      setActiveSuggestion((prev) =>
         prev < filteredSuggestions.length - 1 ? prev + 1 : 0
       );
-    }
-    // Arrow up
-    else if (e.key === 'ArrowUp' && showSuggestions) {
+    } else if (e.key === "ArrowUp" && showSuggestions) {
       e.preventDefault();
-      const filteredSuggestions = suggestions.filter(
-        suggestion => suggestion.toLowerCase().includes(currentQuery.toLowerCase())
+      const filteredSuggestions = suggestions.filter((suggestion) =>
+        suggestion.toLowerCase().includes(currentQuery.toLowerCase())
       );
-      setActiveSuggestion(prev => 
+      setActiveSuggestion((prev) =>
         prev > 0 ? prev - 1 : filteredSuggestions.length - 1
       );
-    }
-    // Enter
-    else if (e.key === 'Enter' && activeSuggestion >= 0 && showSuggestions) {
+    } else if (e.key === "Enter" && activeSuggestion >= 0 && showSuggestions) {
       e.preventDefault();
-      const filteredSuggestions = suggestions.filter(
-        suggestion => suggestion.toLowerCase().includes(currentQuery.toLowerCase())
+      const filteredSuggestions = suggestions.filter((suggestion) =>
+        suggestion.toLowerCase().includes(currentQuery.toLowerCase())
       );
       if (filteredSuggestions[activeSuggestion]) {
         dispatch(setCurrentQuery(filteredSuggestions[activeSuggestion]));
         setShowSuggestions(false);
       }
-    }
-    // Escape
-    else if (e.key === 'Escape') {
+    } else if (e.key === "Escape") {
       setShowSuggestions(false);
     }
   };
 
-  // Close suggestions when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (inputRef.current && !inputRef.current.contains(e.target as Node)) {
         setShowSuggestions(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
-  // Filter suggestions based on input
-  const filteredSuggestions = suggestions.filter(
-    suggestion => suggestion.toLowerCase().includes(currentQuery.toLowerCase())
+  const filteredSuggestions = suggestions.filter((suggestion) =>
+    suggestion.toLowerCase().includes(currentQuery.toLowerCase())
   );
 
   return (
@@ -139,8 +126,8 @@ const QueryInput = () => {
               </button>
             )}
           </div>
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             className="bg-analytics-primary hover:bg-analytics-secondary text-white px-4 py-6 rounded-r-lg"
           >
             <ArrowRight className="h-5 w-5" />
@@ -156,7 +143,7 @@ const QueryInput = () => {
               <li
                 key={index}
                 className={`px-4 py-2 cursor-pointer hover:bg-analytics-light ${
-                  index === activeSuggestion ? 'bg-analytics-light' : ''
+                  index === activeSuggestion ? "bg-analytics-light" : ""
                 }`}
                 onClick={() => handleSuggestionClick(suggestion)}
               >
