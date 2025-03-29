@@ -1,69 +1,78 @@
-# Welcome to your Lovable project
+# Data Analytics & Visualization Tool
 
-## Project info
+A modern, interactive data visualization application that allows users to query data using natural language and get visual results in various chart formats.
 
-**URL**: https://lovable.dev/projects/fdc48507-8862-45b7-a62b-dc293b96beed
+## Features
 
-## How can I edit this code?
+- **Natural Language Queries**: Type questions in plain English to analyze your data
+- **Interactive Visualizations**: View results as bar charts, line graphs, pie charts, and more
+- **Query History**: Keep track of your previous queries for easy reference
+- **Insights Generation**: Mock AI-powered insights to help interpret your data
+- **Responsive Design**: Works seamlessly across desktop and mobile devices
 
-There are several ways of editing your application.
+## Technology Stack
 
-**Use Lovable**
+- **Frontend**: React with TypeScript
+- **State Management**: Redux Toolkit
+- **UI Components**: shadcn/ui (built on Tailwind CSS)
+- **Styling**: Tailwind CSS
+- **Charts**: Recharts
+- **Mock Data**: Simulated API responses for demonstration purposes
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/fdc48507-8862-45b7-a62b-dc293b96beed) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js
+- npm or yarn
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+1. Clone the repository
+```bash
+git clone https://github.com/CShah44/react-redux-data-analytics-platform.git
+cd react-redux-anayltics-platform
 ```
 
-**Edit a file directly in GitHub**
+2. Install dependencies
+```bash
+npm install
+# or
+yarn install
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+3. Start the development server
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-**Use GitHub Codespaces**
+4. Open your browser and navigate to `http://localhost:8000`
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Usage
 
-## What technologies are used for this project?
+1. Type your query in the input field (e.g., "Show me sales by region")
+2. Press Enter or click the Submit button
+3. View the visualization results
+4. Explore the insights provided below the chart
+5. Access your query history from the sidebar
 
-This project is built with .
+## Project Structure
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```
+src/
+├── components/     # UI components
+├── hooks/          # Custom React hooks
+├── store/          # Redux store configuration and slices
+├── utils/          # Utility functions
+└── App.tsx         # Main application component
+```
 
-## How can I deploy this project?
+## Future Enhancements
 
-Simply open [Lovable](https://lovable.dev/projects/fdc48507-8862-45b7-a62b-dc293b96beed) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+- Connection to real data sources via API
+- Advanced filtering options
+- Export functionality for charts and insights
+- User authentication and saved queries
+- Custom chart configurations
